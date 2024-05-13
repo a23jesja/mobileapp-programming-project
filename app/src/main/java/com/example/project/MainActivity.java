@@ -2,10 +2,18 @@ package com.example.project;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
+
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -15,6 +23,16 @@ import java.util.List;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class  MainActivity extends AppCompatActivity implements JsonTask.JsonTaskListener {
+    private WebView myWebView;
+    public void showExternalWebPage(){
+        // TODO: Add your code for showing external web page here
+        myWebView.loadUrl("https://his.se");
+    }
+
+    public void showInternalWebPage(){
+        // TODO: Add your code for showing internal web page here
+        myWebView.loadUrl("file:///android_asset/html/WebView.html");
+    }
     private Gson gson;
     private final String JSON_URL = "https://mobprog.webug.se/json-api?login=a23jesja";
 
@@ -26,6 +44,13 @@ public class  MainActivity extends AppCompatActivity implements JsonTask.JsonTas
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        myWebView = findViewById(R.id.my_webview);
+        myWebView.setWebViewClient(new WebViewClient()); // Do not open in Chrome!
+        WebSettings webSettings = myWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
 
         gson = new Gson();
         //items.add(new Mountain("Jeppe"));
@@ -60,6 +85,36 @@ public class  MainActivity extends AppCompatActivity implements JsonTask.JsonTas
             recyclerItems.add(new RecyclerViewItem(items.get(i).toString()));
         }
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_external_web) {
+            showExternalWebPage();
+            Log.d("==>","Will display external web page");
+            return true;
+        }
+
+        if (id == R.id.action_internal_web) {
+            showInternalWebPage();
+            Log.d("==>","Will display internal web page");
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
 
