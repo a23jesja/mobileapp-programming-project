@@ -1,7 +1,9 @@
 package com.example.project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
@@ -10,9 +12,6 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.app.AppCompatActivity;
-
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -22,17 +21,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class  MainActivity extends AppCompatActivity implements JsonTask.JsonTaskListener {
+public class MainActivity extends AppCompatActivity implements JsonTask.JsonTaskListener {
     private WebView myWebView;
     public void showExternalWebPage(){
         // TODO: Add your code for showing external web page here
-        myWebView.loadUrl("https://his.se");
+        myWebView.loadUrl("file:///android_res/layout/activity_main.xml");
     }
 
     public void showInternalWebPage(){
         // TODO: Add your code for showing internal web page here
-        myWebView.loadUrl("file:///android_asset/html/WebView.html");
+        Intent second = new Intent(MainActivity.this, SecondActivity.class);
+        startActivity(second);
+        //myWebView.loadUrl("file:///android_asset/about.html");
     }
+    private RecyclerView view;
     private Gson gson;
     private final String JSON_URL = "https://mobprog.webug.se/json-api?login=a23jesja";
 
@@ -44,10 +46,9 @@ public class  MainActivity extends AppCompatActivity implements JsonTask.JsonTas
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        myWebView = findViewById(R.id.my_webview);
+        myWebView = findViewById(R.id.min_webview);
         myWebView.setWebViewClient(new WebViewClient()); // Do not open in Chrome!
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -67,7 +68,7 @@ public class  MainActivity extends AppCompatActivity implements JsonTask.JsonTas
             }
         });
 
-        RecyclerView view = findViewById(R.id.recycler_view);
+        view = findViewById(R.id.recycler_view);
         view.setLayoutManager(new LinearLayoutManager(this));
         view.setAdapter(adapter);
 
@@ -104,12 +105,16 @@ public class  MainActivity extends AppCompatActivity implements JsonTask.JsonTas
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_external_web) {
             showExternalWebPage();
+            myWebView.setVisibility(View. GONE);
+            view.setVisibility(View.VISIBLE);
             Log.d("==>","Will display external web page");
             return true;
         }
 
         if (id == R.id.action_internal_web) {
             showInternalWebPage();
+            myWebView.setVisibility(View. VISIBLE);
+            view.setVisibility(View.GONE);
             Log.d("==>","Will display internal web page");
             return true;
         }
@@ -117,5 +122,3 @@ public class  MainActivity extends AppCompatActivity implements JsonTask.JsonTas
         return super.onOptionsItemSelected(item);
     }
 }
-
-
