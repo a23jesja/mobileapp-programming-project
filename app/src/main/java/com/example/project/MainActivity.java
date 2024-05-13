@@ -2,6 +2,7 @@ package com.example.project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -30,9 +31,11 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
 
     public void showInternalWebPage(){
         // TODO: Add your code for showing internal web page here
+
+        //myWebView.loadUrl("file:///android_asset/about.html");
         Intent second = new Intent(MainActivity.this, SecondActivity.class);
         startActivity(second);
-        //myWebView.loadUrl("file:///android_asset/about.html");
+
     }
     private RecyclerView view;
     private Gson gson;
@@ -87,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         }
         adapter.notifyDataSetChanged();
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
